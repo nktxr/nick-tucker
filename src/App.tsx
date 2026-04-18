@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import profilePic from './assets/profile_pic.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
@@ -14,6 +15,8 @@ function App() {
           <img src={heroImg} className="base" width="170" height="179" alt="" />
           <img src={reactLogo} className="framework" alt="React logo" />
           <img src={viteLogo} className="vite" alt="Vite logo" />
+          <img src={profilePic} className="profile_pic" width="170" height="179" alt="Profile picture" />
+
         </div>
         <div>
           <h1>I've edited the title</h1>
