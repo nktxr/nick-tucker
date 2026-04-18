@@ -11,7 +11,7 @@ Currently, two official plugins are available:
 
 ```bash
 yarn add -D vite && \
-yarn vite serve
+yarn dev --force
 ```
 
 ## React Compiler
