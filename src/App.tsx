@@ -1,124 +1,64 @@
-import { useState } from 'react'
-import profilePic from './assets/profile_pic.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import React, { useState, useEffect, useMemo } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { themes } from './theme';
+import { getStyles, getBlogStyles, getAboutStyles, getResumeStyles } from './styles';
+import { Home } from './Home';
+import { Blog } from './Blog';
+import { About } from './About';
+import { Resume } from './Resume';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('darkMode');
+    return saved === 'true';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('darkMode', isDarkMode.toString());
+  }, [isDarkMode]);
+
+  const theme = isDarkMode ? themes.dark : themes.light;
+
+  // Memoize styles to prevent recalculation on every render
+  const styles = useMemo(() => ({
+    base: getStyles(theme),
+    blog: getBlogStyles(theme),
+    about: getAboutStyles(theme),
+    resume: getResumeStyles(theme),
+  }), [theme]);
+
+  const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-          <img src={profilePic} className="profile_pic" width="170" height="179" alt="Profile picture" />
-
+    <Router>
+      <div 
+        className="app-container" 
+        style={{ 
+          backgroundColor: theme.background, 
+          minHeight: '100vh', 
+          transition: 'background-color 0.3s ease',
+          position: 'relative' // Ensures toggle is positioned relative to this container
+        }}
+      >
+        <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
+          <button 
+            onClick={toggleDarkMode}
+            style={{ ...styles.base.button, borderRadius: '50%', width: '45px', height: '45px', padding: 0 }}
+          >
+            {isDarkMode ? '🌙' : '☀️'}
+          </button>
         </div>
-        <div>
-          <h1>I've edited the title</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        <main>
+          <Routes>
+            <Route path="/" element={<Home styles={styles.base} theme={theme} />} />
+            <Route path="/blog" element={<Blog styles={styles.base} blogStyles={styles.blog} theme={theme} />} />
+            <Route path="/about" element={<About styles={styles.base} aboutStyles={styles.about} theme={theme} />} />
+            <Route path="/resume" element={<Resume styles={styles.base} resumeStyles={styles.resume} theme={theme} />} />
+          </Routes>
+        </main>
+      </div>
+    </Router>
+  );
 }
 
-export default App
+export default App;

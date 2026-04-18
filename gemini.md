@@ -2,8 +2,10 @@
 
 ## Overview
 
-This project is a React-based application, designed for deployment on Cloudflare workers.
-This application/site should be a personal website:
+- This project is a React-based application, designed for deployment on Cloudflare workers.
+- This application/site should be a personal website
+- The creator of this site has basic experience with Python, but no experience with node/React/Vite
+- Code should be annotated for understanding
 
 ## Home page
 
